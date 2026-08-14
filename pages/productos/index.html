@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Productos UCompensar</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Inventario de Productos</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+        </tr>
+      </thead>
+      <tbody id="tablaProductos"></tbody>
+    </table>
+
+    <script>
+      async function obtenerProductos() {
+        const tabla = document.getElementById('tablaProductos');
+        try {
+          const respuesta = await fetch('/api/v1/pages/productos');
+          const resultado = await respuesta.json();
+          const listaProductos = resultado.data;
+
+          tabla.innerHTML = '';
+
+          listaProductos.forEach((prod) => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                    <td>${prod.id}</td>
+                    <td>${prod.nombre}</td>
+                    <td>$${prod.precio.toLocaleString()}</td>
+                    <td>${prod.cantidad} unidades</td>
+                `;
+            tabla.appendChild(fila);
+          });
+        } catch (error) {
+          console.error('Error al cargar productos:', error);
+        }
+      }
+      obtenerProductos();
+    </script>
+  </body>
+</html>
