@@ -9,6 +9,13 @@
   <body>
     <h1>Inventario de Productos</h1>
 
+    <div class="busqueda">
+      <input type="number" id="inputId" placeholder="Buscar por ID..." min="1" />
+      <button onclick="buscarPorId()">Buscar</button>
+      <button onclick="obtenerProductos()">Ver todos</button>
+    </div>
+    <p id="mensajeError" style="color: red;"></p>
+
     <table>
       <thead>
         <tr>
@@ -22,30 +29,74 @@
     </table>
 
     <script>
-      async function obtenerProductos() {
-        const tabla = document.getElementById('tablaProductos');
-        try {
-          const respuesta = await fetch('/api/v1/pages/productos');
-          const resultado = await respuesta.json();
-          const listaProductos = resultado.data;
+      const tabla = document.getElementById('tablaProductos');
+      const mensajeError = document.getElementById('mensajeError');
 
-          tabla.innerHTML = '';
-
-          listaProductos.forEach((prod) => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
+      function pintarFilas(lista) {
+        tabla.innerHTML = '';
+        lista.forEach((prod) => {
+          const fila = document.createElement('tr');
+          fila.innerHTML = `
                     <td>${prod.id}</td>
                     <td>${prod.nombre}</td>
                     <td>$${prod.precio.toLocaleString()}</td>
                     <td>${prod.cantidad} unidades</td>
                 `;
-            tabla.appendChild(fila);
-          });
+          tabla.appendChild(fila);
+        });
+      }
+
+      async function obtenerProductos() {
+        mensajeError.textContent = '';
+        try {
+          const respuesta = await fetch('/api/v1/pages/productos');
+          const resultado = await respuesta.json();
+          pintarFilas(resultado.data);
         } catch (error) {
           console.error('Error al cargar productos:', error);
         }
       }
+
+      async function buscarPorId() {
+        mensajeError.textContent = '';
+        const id = document.getElementById('inputId').value;
+
+        if (!id) {
+          mensajeError.textContent = 'Ingresa un ID válido.';
+          return;
+        }
+
+        try {
+          const respuesta = await fetch(`/api/v1/pages/productos/${id}`);
+          const resultado = await respuesta.json();
+
+          if (respuesta.ok && resultado.success) {
+            pintarFilas([resultado.data]);
+          } else {
+            tabla.innerHTML = '';
+            mensajeError.textContent = resultado.mensaje || 'Producto no encontrado.';
+          }
+        } catch (error) {
+          console.error('Error al buscar producto:', error);
+          mensajeError.textContent = 'Error al conectar con el servidor.';
+        }
+      }
+
       obtenerProductos();
+
+       function iniciar() {
+        const params = new URLSearchParams(window.location.search);
+        const idUrl = params.get('id');
+
+        if (idUrl) {
+          document.getElementById('inputId').value = idUrl;
+          buscarPorId();
+        } else {
+          obtenerProductos();
+        }
+      }
+
+      iniciar();
     </script>
   </body>
 </html>

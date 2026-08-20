@@ -17,8 +17,6 @@ const productos = [
   { id: 5, nombre: 'Auriculares', precio: 120000, cantidad: 25 },
 ];
 
-// --- RUTA CORREGIDA PARA SERVIR TU HTML ---
-// Apunta a: tu_carpeta/pages/productos/index.html
 app.get('/', (req, res) => {
   const rutaHtml = resolve(__dirname, 'pages', 'productos', 'index.html');
   console.log('Buscando el HTML en:', rutaHtml);
@@ -42,6 +40,25 @@ app.get('/api/v1/pages/productos', (req, res) => {
     data: productos,
   });
 });
+
+// Enpoint 3:oibterner los productos por id
+app.get('/api/v1/pages/productos/:id', (req, res) => {
+  const { id } = req.params;
+  const producto = productos.find((p) => p.id === parseInt(id));
+
+  if (producto) {
+    res.status(200).json({
+      success: true,
+      data: producto,
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      mensaje: 'Producto no encontrado',
+      timestamp: new Date(),
+    });
+  }
+})
 
 // Endpoint para error de url no encontrada
 app.use((req, res) => {

@@ -17,6 +17,66 @@
     margin-bottom: 30px;
     font-size: 28px;
   }
+
+  .busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .busqueda input[type="number"] {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .busqueda input[type="number"]:focus {
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  }
+
+  .busqueda button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2c3e50;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .busqueda button:hover {
+    background-color: #1a1a2e;
+  }
+
+  .busqueda button:active {
+    transform: scale(0.97);
+  }
+
+  .busqueda button:last-of-type {
+    background-color: #27ae60;
+  }
+
+  .busqueda button:last-of-type:hover {
+    background-color: #219150;
+  }
+
+  #mensajeError {
+    text-align: center;
+    min-height: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
   
   table {
     width: 70%;
@@ -77,5 +137,13 @@
       padding: 10px;
       font-size: 14px;
     }
+
+    .busqueda {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .busqueda input[type="number"] {
+      width: 100%;
+    }
   }
-  
